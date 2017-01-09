@@ -1,0 +1,22 @@
+{
+  "name": "rubin/brainstorm",
+  "keywords": ["test", "bot"],
+  "authors": [
+    {
+      "name": "Shashurin Roman",
+      "email": "dalamar84@mail.ru"
+    }
+  ],
+  "config": {
+    "preferred-install": "dist"
+  },
+  "autoload": {
+    "psr-4": {
+      "Brainstorm\\": "source/",
+      "Brainstorm\\WambaPHP\\": "wamba/"
+    }
+  },
+  "require": {
+    "php": ">=5.6.1"
+  }
+}
