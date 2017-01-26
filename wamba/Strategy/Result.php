@@ -50,12 +50,16 @@ class Result extends Strategy
             $question = $currentStorage->current();
         }
 
-        if ($score > 250)
-            $this->makeHtml($score);
+        if ($score > 300)
+            $this->makeHtml($score, $this->getResultLink($html));
 
         return $this->getQuiz()->getTransport()->getTo('https://corp.wamba.com/ru/test', true);
     }
 
+    /**
+     * @param string $html
+     * @return int
+     */
     protected function getScore($html)
     {
         if (preg_match("/<dl class=\"points\"><dt>(\d+)<\/dt>/", $html, $matches))
@@ -64,13 +68,33 @@ class Result extends Strategy
         }
     }
 
-    protected function getScoreWeight($score) {
-        return ($score - 120) / 1000;
+    /**
+     * @param string $html
+     * @return string
+     */
+    protected function getResultLink($html)
+    {
+        if (preg_match("/<textarea(.*)>(.*)<\/textarea>/iUs", $html, $matches))
+        {
+            return (string)$matches[2];
+        }
     }
 
-    protected function makeHtml($score)
+    /**
+     * @param int $score
+     * @return float
+     */
+    protected function getScoreWeight($score) {
+        return ($score - 120) / 2000;
+    }
+
+    /**
+     * @param int $score
+     * @param string $link
+     */
+    protected function makeHtml($score, $link)
     {
-        $result = '';
+        $result = $link . '<br>';
         $storage = $this->getQuiz()->getDataStorage();
 
         $storage->rewind();
@@ -86,7 +110,7 @@ class Result extends Strategy
 
             $result .= '<div><ul>';
             /** @var Variant $variant */
-            foreach ($answers as $variant)
+            foreach ($answers->variants as $variant)
             {
                 $result .= '<li>(' . $variant->getWeight() . ") " . $variant->getText() . '</li>>';
             }

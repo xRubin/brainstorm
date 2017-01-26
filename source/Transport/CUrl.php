@@ -24,6 +24,7 @@ class CUrl implements Transport
     {
         $this->curl = curl_init();
 
+        @unlink($this->cookieFile);
         $this->cookieFile = uniqid('/tmp/');
 
         curl_setopt($this->curl, CURLOPT_COOKIEFILE, $this->cookieFile);
